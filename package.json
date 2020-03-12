@@ -1,0 +1,49 @@
+{
+  "name": "shri2020_task2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "lint": "./node_modules/.bin/eslint src/js/**/*",
+    "start": "NODE_ENV=development ./node_modules/.bin/webpack --watch",
+    "build": "npm run build_dev",
+    "build_prod": "NODE_ENV=production ./node_modules/.bin/webpack",
+    "build_dev": "NODE_ENV=development ./node_modules/.bin/webpack"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-stagedt"
+    }
+  },
+  "lint-staged": {
+    "src/js/linter.js": [
+      "./node_modules/.bin/eslint src/js/**/*"
+    ]
+  },
+  "dependencies": {
+    "core-js": "^3.6.4"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.3",
+    "@babel/preset-env": "^7.8.3",
+    "babel-jest": "^24.9.0",
+    "babel-loader": "^8.0.6",
+    "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^5.1.1",
+    "eslint": "^6.7.2",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-import": "^2.19.1",
+    "eslint-plugin-node": "^10.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "husky": "^4.0.7",
+    "jest": "^24.9.0",
+    "lint-staged": "^9.5.0",
+    "uglifyjs-webpack-plugin": "^2.2.0",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10"
+  },
+  "author": "Dmitry Rakov",
+  "license": "ISC"
+}
