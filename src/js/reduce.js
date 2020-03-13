@@ -1,3 +1,41 @@
+// Ф-ция, которую надо реализовать
+const reduce = async (array, fn, initialValue, cb) => {
+  const promisifiedLength = promisify(array.length);
+  const promisifiedGet = promisify(array.get);
+
+  let length = await promisifiedLength();
+
+  // Определяем условия для краевых случаев
+  let [isEmptyArr, isShortArray, isInitialAbsent] = await Promise.all([
+    await promisifiedEqual(length, 0),
+    await promisifiedEqual(length, 1),
+    await promisifiedEqual(initialValue, undefined)
+  ]);
+
+  // Обрабатываем каревые случаи, чтобы лишний раз не гонять цикл
+  if (isEmptyArr && isInitialAbsent) throw new Error('Ошибка, передан пустой массив и не задано начальное значение');
+  else if (isEmptyArr && !isInitialAbsent) return initialValue;
+  else if (isShortArray && isInitialAbsent) return promisifiedGet(0);
+  else {
+    let idx = 0;
+    let acc;
+    if (initialValue) {
+      acc = initialValue;
+    }
+    else {
+      acc = await promisifiedGet(idx);
+      idx = await promisifiedAdd(idx, 1);
+    }
+    while (await promisifiedLess(idx, length)) {
+      acc = await fn(acc, await promisifiedGet(idx), idx, array);
+      idx = await promisifiedAdd(idx, 1);
+    }
+    return acc;
+  }
+};
+
+window.reduce = reduce;
+
 const {
   AsyncArray,
   add,
@@ -11,137 +49,111 @@ const {
   sqrt
 } = Homework;
 
-// Исходный массив
-const arrayEmpty = new AsyncArray([]);
-const arrayOneElem = new AsyncArray([14]);
-const array1 = new AsyncArray([3, 2, 1]);
-const array2 = new AsyncArray([[0, 1], [2, 3], [4, 5]]);
-
-// Ф-ции обработки reduce
-const fn1 = (acc, cur, idx, array) => { return acc * cur };
-const fn2 = (acc, cur, idx, array) => { return acc.concat(cur) };
-
-// Колбэк
-const cb = (result) => { console.log(result) };
-
 // Ф-ция промисификации
-const promisify = function(callbackBasedApi) {
+const promisify = function(cb) {
   return function promisified() {
     const args = [].slice.call(arguments);
     return new Promise((resolve, reject) => {
       args.push((result) => resolve(result));
-      callbackBasedApi.apply(null, args);
+      cb.apply(null, args);
     });
   }
 };
 
-// reduce(arrayEmpty, fn1, undefined, cb);
-// reduce(arrayEmpty, fn1, 33, cb);
-// reduce(arrayOneElem, fn1, undefined, cb);
-reduce(array1, fn1, 5, cb);
-// reduce(array2, fn2, undefined, cb);
-// console.log(reduce(array, fn, null, cb));
+// Промифицирруем ф-ци тут (а не внутри reduce),
+// потому что они нам нужны и в передаваемых в reduce ф-циях обработки fn.
 
-function reduce(array, fn, initialValue, cb) {
-  // Промисифицируем необходимые для работы функции
-  const promisifiedLength = promisify(array.length);
-  const promisifiedEqual = promisify(equal);
-  const promisifiedLess = promisify(less);
-  const promisifiedGet = promisify(array.get);
-  const promisifiedAdd = promisify(add);
+// Промисифицируем функции, использующиеся в самом reduce
+const promisifiedEqual = promisify(equal);
+const promisifiedLess = promisify(less);
+const promisifiedAdd = promisify(add);
 
-  (async function () {
-    let length = await promisifiedLength();
-    let isEmptyArr = await promisifiedEqual(length, 0);
-    let isShortArray = await promisifiedEqual(length, 1);
-    let isInitialAbsent = await promisifiedEqual(initialValue, undefined);
+// Промисифицируем функции, использующиеся в fn
+const promisifiedSubtract = promisify(subtract);
+const promisifiedDivide = promisify(divide);
 
-    if (isEmptyArr && isInitialAbsent) throw Error();
-    else if (isEmptyArr && !isInitialAbsent) return initialValue;
-    else if (isShortArray && isInitialAbsent) return promisifiedGet(0);
-    else {
-      let idx = 0;
-      let acc = (initialValue) ? initialValue : 0;
-      while (await promisifiedLess(idx, length)) {
-        let cur = await promisifiedGet(idx);
-        acc = fn(acc, cur, idx, array);
-        idx = await promisifiedAdd(idx, 1);
-      }
-      return acc;
-    }
-  })()
-    .then((result) => {
-      cb(result);
-    }).catch((err) => {
-      console.log(`Ошибка: ${err}`);
-    });
+// Промисифируем остальные функции (на всякий случай)
+const promisifiedMultiply = promisify(multiply);
+const promisifiedMod = promisify(mod);
+const promisifiedLessOrEqual = promisify(lessOrEqual);
+const promisifiedSqrt = promisify(sqrt);
 
-  // Попробовтаь написать чисто на Promise
-  // const loop = (idx, length) => {
-  //   promisifiedLess(idx, length)
-  //     .then((isLess) => {
-  //       if (isLess) return promisifiedGet(idx);
-  //       else return;
-  //     })
-  //     .then((cur) => {
-  //       acc = fn(acc, cur, idx, array);
-  //       return acc
-  //     });
-  //   if (idx < length) {
-  //       acc = fn(acc, arr1[idx], idx, arr1);
-  //       idx++;
-  //
-  //     }
-  //   }
-  // };
-  // let data = {};
-  // promisifiedLength()
-  //   .then((length) => {
-  //     data.length = length;
-  //     return Promise.all([
-  //       promisifiedEqual(length, 0),
-  //       promisifiedEqual(length, 1),
-  //       promisifiedEqual(initialValue, undefined),
-  //     ]);
-  //   })
-  //   .then((args) => {
-  //     const [isEmptyArr, isShortArray, isInitialAbsent] = args;
-  //     if (isEmptyArr && isInitialAbsent) throw Error();
-  //     else if (isEmptyArr && !isInitialAbsent) return initialValue;
-  //     else if (isShortArray && isInitialAbsent) return promisifiedGet(0);
-  //     else {
-  //       // return 5;
-  //       // let arr1 = [[0, 1], [2, 3], [4, 5]];
-  //       debugger
-  //       // let idx = 0;
-  //       // let acc = (initialValue) ? initialValue : 0;
-  //       // while (idx < data.length) {
-  //       //   acc = fn(acc, arr1[idx], idx, arr1);
-  //       //   idx++;
-  //       // }
-  //       // return acc;
-  //     }
-  //   })
-  //   .then((result) => {
-  //     console.log('result: ', result);
-  //   })
-  //   .catch((error) => console.log(error));
+// ===== Мини-проверка =====
+// Исходные массивы. Асинхронные
+const arrayEmpty = new AsyncArray([]);
+const arrayOneElem = new AsyncArray([14]);
+const arrayNum1 = new AsyncArray([10, 20, 30, 40, 50]);
+const arrayNum2 = new AsyncArray([14, -3, 9, 17, 0, -5, 5, -5, 13]);
+const arrayFloats = new AsyncArray([45.3, 12.34, 14.5, 24, 39.02]);
+const arrayStrings = new AsyncArray(['too','old','for','this','shit']);
+const arrayArrays = new AsyncArray([[0, 1], [2, 3], [4, 5]]);
 
+// Примеры ф-ций обработки для использования в reduce ( в том числе асинхронные )
+const fnSum = async (acc, cur, idx, src) => await promisifiedAdd(acc, cur);
+const fnMax = (acc, cur, idx, array) => Math.max(acc, cur);
+const fnAverage = async (acc, cur, idx, src) => {
+  let length = await (promisify(src.length))();
+  let lastIdx = await promisifiedSubtract(length, 1);
+  let isLastIdx = await promisifiedEqual(idx, lastIdx);
+  acc = await promisifiedAdd(acc, cur);
+  if (isLastIdx) acc = await promisifiedDivide(acc, length);
+  return acc;
+};
+const fnJoin = (acc, cur, idx, src) => [acc, cur].join(' ');
+const fnConcat = (acc, cur, idx, src) => acc.concat(cur);
 
-  //
-  // if (length === 0 && !initialValue) throw Error();
-  // else if (length === 0 && initialValue) return initialValue;
-  // else if (length === 1 && !initialValue) return array[0];
-  // else {
-  //   let idx = 0;
-  //   let acc = (initialValue) ? initialValue : 0;
-  //   while (idx < length) {
-  //     acc = fn(acc, array[idx], idx, array);
-  //     idx++;
-  //   }
-  //   return acc;
-  // }
+// Колбэк
+const cb = (result) => { console.log(result) };
 
-}
+console.log('======= Acинхронный reduce (через async/await =============');
+// Вызов ф-ции reduce - ответы в консоли будут выведены в асинхронном порядке
+reduce(arrayEmpty, fnSum, null, cb)
+  .then((result) => cb(result))
+  .catch((err) => console.log(`Ошибка: ${err}`));         // Error
+
+reduce(arrayEmpty, fnSum, 39, cb)
+  .then((result) => cb(result))
+  .catch((err) => console.log(`Ошибка: ${err}`));           // 39
+
+reduce(arrayOneElem, fnSum, null, cb)
+  .then((result) => cb(result))
+  .catch((err) => console.log(`Ошибка: ${err}`));       // 14
+
+reduce(arrayOneElem, fnSum, 39, cb)
+  .then((result) => cb(result))
+  .catch((err) => console.log(`Ошибка: ${err}`));         // 53
+
+reduce(arrayNum1, fnSum, null, cb)
+  .then((result) => cb(result))
+  .catch((err) => console.log(`Ошибка: ${err}`));          // 150
+
+reduce(arrayNum1, fnSum, 5, cb)
+  .then((result) => cb(result))
+  .catch((err) => console.log(`Ошибка: ${err}`));             // 155
+
+reduce(arrayNum2, fnMax, null, cb)
+  .then((result) => cb(result))
+  .catch((err) => console.log(`Ошибка: ${err}`));          // 17
+
+reduce(arrayFloats, fnAverage, null, cb)
+  .then((result) => cb(result))
+  .catch((err) => console.log(`Ошибка: ${err}`));    // 27.032
+
+reduce(arrayStrings, fnJoin, null, cb)
+  .then((result) => cb(result))
+  .catch((err) => console.log(`Ошибка: ${err}`));      // "too old for this shit"
+
+reduce(arrayStrings, fnJoin, "Never", cb)
+  .then((result) => cb(result))
+  .catch((err) => console.log(`Ошибка: ${err}`));   // "Never too old for this shit"
+
+reduce(arrayArrays, fnConcat, null, cb)
+  .then((result) => cb(result))
+  .catch((err) => console.log(`Ошибка: ${err}`));     // [0, 1, 2, 3, 4, 5]
+
+reduce(arrayArrays, fnConcat, [-2, -1], cb)
+  .then((result) => cb(result))
+  .catch((err) => console.log(`Ошибка: ${err}`)); // [-2, -1, 0, 1, 2, 3, 4, 5]
+
 
 

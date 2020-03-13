@@ -1,6 +1,8 @@
 // Синхронная ф-ция reduce
 const reduceSync = (array, fn, initialValue, cb) => {
   let result;
+
+  // Обрабатываем каревые случаи, чтобы лишний раз не гонять цикл
   if (array.length === 0 && !initialValue) result = new Error('Ошибка, передан пустой массив и не задано начальное значение');
   else if (array.length === 0 && initialValue) result = initialValue;
   else if (array.length === 1 && !initialValue) result = array[0];
@@ -37,13 +39,13 @@ const arraySyncStrings = ['too','old','for','this','shit'];
 const arraySyncArrays = [[0, 1], [2, 3], [4, 5]];
 
 // Ф-ции обработки reduce. Обычные
-const fnSum = (acc, cur, idx, array) => { return acc + cur };
-const fnMax = (acc, cur, idx, array) => { return Math.max(acc, cur) };
+const fnSum = (acc, cur, idx, array) => acc + cur;
+const fnMax = (acc, cur, idx, array) => Math.max(acc, cur);
 const fnAverage = (acc, cur, idx, array) => {
   return (idx === array.length - 1) ? (acc + cur) / array.length : acc + cur;
 };
-const fnJoin = (acc, cur, idx, array) => { return acc + ' ' + cur };
-const fnConcat = (acc, cur, idx, array) => { return acc.concat(cur) };
+const fnJoin = (acc, cur, idx, array) => [acc, cur].join(' ');
+const fnConcat = (acc, cur, idx, array) => acc.concat(cur);
 
 // Колбэк
 const cb = (result) => { console.log(result) };

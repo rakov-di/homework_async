@@ -30,6 +30,7 @@ module.exports = {
   context: path.resolve(rootPath + '/src'),
   entry: {
     'reduce': './js/reduce.js',
+    'reduceSync': './js/reduceSync.js',
     'shri-async-hw': './js/shri-async-hw.js'
   },
   plugins: [
