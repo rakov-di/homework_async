@@ -23,12 +23,16 @@ const reduce = async (array, fn, initialValue, cb) => {
       acc = initialValue;
     }
     else {
-      acc = await promisifiedGet(idx);
-      idx = await promisifiedAdd(idx, 1);
+      [acc, idx] = await Promise.all([
+        await promisifiedGet(idx),
+        await promisifiedAdd(idx, 1)
+      ]);
     }
     while (await promisifiedLess(idx, length)) {
-      acc = await fn(acc, await promisifiedGet(idx), idx, array);
-      idx = await promisifiedAdd(idx, 1);
+      [acc, idx] = await Promise.all([
+        await fn(acc, await promisifiedGet(idx), idx, array),
+        await promisifiedAdd(idx, 1)
+      ]);
     }
     return acc;
   }
