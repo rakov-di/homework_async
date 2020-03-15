@@ -34,8 +34,7 @@ function reduce(
   Дополнительно реализованы:
   - `js/reduceSync` - реализация синхронной функции `reduceSync`, для сравнения с асинхронным reduce.
   - `js/checkReduceSync` - типа тесты для `reduceSync`.
-  - `js/reducePromise` - дополнительная реализация асинхронной функции `reducePromise` (асинхронный reduce, но БЕЗ использования async/await в самом `reducePromise`)
-  
+
   Чтобы увидеть результаты работы дополнительных функций, надо раскомментировать в [build/index.html](build/index.html) соответствующие строки.
   
 # Примечание
