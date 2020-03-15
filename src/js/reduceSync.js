@@ -38,7 +38,7 @@ const arraySyncOneElem = [14];
 const arraySyncNum1 = [10, 20, 30, 40, 50];
 const arraySyncNum2 = [14, -3, 9, 17, 0, -5, 5, -5, 13];
 const arraySyncFloats = [45.3, 12.34, 14.5, 24, 39.02];
-const arraySyncStrings = ['too','old','for','this','shit'];
+const arraySyncStrings = ['too', 'old', 'for', 'this', 'shit'];
 const arraySyncArrays = [[0, 1], [2, 3], [4, 5]];
 
 // Ф-ции обработки массивов для reduce. Обычные
@@ -51,7 +51,7 @@ const fnJoin = (acc, cur, idx, array) => [acc, cur].join(' ');
 const fnConcat = (acc, cur, idx, array) => acc.concat(cur);
 
 // Колбэк
-const cb = (result) => { console.log(result) };
+const cb = result => console.log(result);
 
 console.log('======= Синхронный reduce =============');
 reduceSync(arraySyncEmpty, fnSum, null, cb);         // Error
@@ -63,6 +63,6 @@ reduceSync(arraySyncNum1, fnSum, 5, cb);             // 155
 reduceSync(arraySyncNum2, fnMax, null, cb);          // 17
 reduceSync(arraySyncFloats, fnAverage, null, cb);    // 27.032
 reduceSync(arraySyncStrings, fnJoin, null, cb);      // "too old for this shit"
-reduceSync(arraySyncStrings, fnJoin, "Never", cb);   // "Never too old for this shit"
+reduceSync(arraySyncStrings, fnJoin, 'Never', cb);   // "Never too old for this shit"
 reduceSync(arraySyncArrays, fnConcat, null, cb);     // [0, 1, 2, 3, 4, 5]
 reduceSync(arraySyncArrays, fnConcat, [-2, -1], cb); // [-2, -1, 0, 1, 2, 3, 4, 5]

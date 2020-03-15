@@ -87,13 +87,9 @@ const {
   AsyncArray,
   add,
   subtract,
-  multiply,
   divide,
-  mod,
   less,
-  equal,
-  lessOrEqual,
-  sqrt
+  equal
 } = Homework;
 
 // Ф-ция промисификации
