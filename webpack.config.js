@@ -31,6 +31,7 @@ module.exports = {
   entry: {
     'reduce': './js/reduce.js',
     'reduceSync': './js/reduceSync.js',
+    'reducePromise': './js/reducePromise.js',
     'shri-async-hw': './js/shri-async-hw.js'
   },
   plugins: [

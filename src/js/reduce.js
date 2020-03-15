@@ -1,5 +1,6 @@
 // Ф-ция, которую надо реализовать
 const reduce = async (array, fn, initialValue, cb) => {
+  // Промифицируем ф-ции внешнего API, которые используются в reduce
   const promisifiedLength = promisify(array.length);
   const promisifiedGet = promisify(array.get);
 

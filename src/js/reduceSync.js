@@ -9,6 +9,7 @@ const reduceSync = (array, fn, initialValue, cb) => {
   else {
     let idx = 0;
     let acc;
+
     if (initialValue) {
       acc = initialValue;
     }
@@ -16,12 +17,14 @@ const reduceSync = (array, fn, initialValue, cb) => {
       acc = array[idx];
       idx++;
     }
+
     while (idx < array.length) {
       acc = fn(acc, array[idx], idx, array);
       idx++;
     }
     result = acc;
   }
+
   cb(result);
   return result;
 };
@@ -38,7 +41,7 @@ const arraySyncFloats = [45.3, 12.34, 14.5, 24, 39.02];
 const arraySyncStrings = ['too','old','for','this','shit'];
 const arraySyncArrays = [[0, 1], [2, 3], [4, 5]];
 
-// Ф-ции обработки reduce. Обычные
+// Ф-ции обработки массивов для reduce. Обычные
 const fnSum = (acc, cur, idx, array) => acc + cur;
 const fnMax = (acc, cur, idx, array) => Math.max(acc, cur);
 const fnAverage = (acc, cur, idx, array) => {
@@ -63,8 +66,3 @@ reduceSync(arraySyncStrings, fnJoin, null, cb);      // "too old for this shit"
 reduceSync(arraySyncStrings, fnJoin, "Never", cb);   // "Never too old for this shit"
 reduceSync(arraySyncArrays, fnConcat, null, cb);     // [0, 1, 2, 3, 4, 5]
 reduceSync(arraySyncArrays, fnConcat, [-2, -1], cb); // [-2, -1, 0, 1, 2, 3, 4, 5]
-
-
-
-
-
