@@ -30,6 +30,7 @@ module.exports = {
   context: path.resolve(rootPath + '/src'),
   entry: {
     'reduce': './js/reduce.js',
+    'checkReduce': './js/checkReduce.js',
     'reduceSync': './js/reduceSync.js',
     'reducePromise': './js/reducePromise.js',
     'shri-async-hw': './js/shri-async-hw.js'
