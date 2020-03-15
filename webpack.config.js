@@ -32,6 +32,7 @@ module.exports = {
     'reduce': './js/reduce.js',
     'checkReduce': './js/checkReduce.js',
     'reduceSync': './js/reduceSync.js',
+    'checkReduceSync': './js/checkReduceSync.js',
     'reducePromise': './js/reducePromise.js',
     'shri-async-hw': './js/shri-async-hw.js'
   },

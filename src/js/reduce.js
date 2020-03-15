@@ -68,8 +68,8 @@ const reduce = async (array, fn, initialValue, cb) => {
       cb(result);
       return result;
     })
-    .catch(err => console.error(`${err}`));
+    .catch(err => console.error(err));
 };
 
-// Записываем в глобальную переменную, чтобы был доступ к ф-ции извне
+// Записываем в глобальную переменную, для быстрого доступ к ф-ции извне
 window.reduce = reduce;
