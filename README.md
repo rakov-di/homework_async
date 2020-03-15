@@ -28,13 +28,13 @@ function reduce(
   Основные:
   - `pages/index.html` - страница, подключающая скрипты.
   - `shri-async-hw.js` - API Homework.
-  - `js/reduce` - основная реализация асинхронной функции reduce (с использованием async/await).
+  - `js/reduce` - основная реализация асинхронной функции `reduce` (с использованием async/await).
   - `js/checkReduce` - типа тесты. Несколько вызовов reduce для разных массивов и ф-ций обработки fn.
   
   Дополнительно реализованы:
-  - `js/reduceSync` - реализация синхронной функции reduceSync, для сравнения с асинхронным reduce.
-  - `js/checkReduceSync` - типа тесты для reduceSync.
-  - `js/reducePromise` - дополнительная реализация асинхронной функции reducePromise (асинхронный reduce, н оБЕЗ использования async/await в самом reducePromise)
+  - `js/reduceSync` - реализация синхронной функции `reduceSync`, для сравнения с асинхронным reduce.
+  - `js/checkReduceSync` - типа тесты для `reduceSync`.
+  - `js/reducePromise` - дополнительная реализация асинхронной функции `reducePromise` (асинхронный reduce, но БЕЗ использования async/await в самом `reducePromise`)
   
   Чтобы увидеть результаты работы дополнительных функций, надо раскомментировать в [build/index.html](build/index.html) соответствующие строки.
   
