@@ -39,7 +39,7 @@
     "lint-staged": "^9.5.0",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack": "^4.41.5",
-    "webpack-cli": "^3.3.10"
+    "webpack-cli": "^3.3.12"
   },
   "author": "Dmitry Rakov",
   "license": "ISC"
